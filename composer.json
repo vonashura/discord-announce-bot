@@ -41,7 +41,13 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "nunomaduro/collision",
+                "fakerphp/faker",
+                "laravel/pint",
+                "mockery/mockery",
+                "phpunit/phpunit"
+            ]
         }
     },
     "config": {
