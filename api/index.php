@@ -30,4 +30,18 @@ if (isset($_ENV['VERCEL'])) {
     $app->useStoragePath('/tmp/laravel-storage');
 }
 
+// Auto-migrate on Vercel (runs once per cold start, uses file lock in /tmp)
+if (isset($_ENV['VERCEL'])) {
+    $lockFile = '/tmp/laravel-migrated';
+    if (!file_exists($lockFile)) {
+        try {
+            $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+            $kernel->call('migrate', ['--force' => true]);
+            file_put_contents($lockFile, '1');
+        } catch (\Throwable $e) {
+            // ignore — DB might not be configured yet
+        }
+    }
+}
+
 $app->handleRequest(Request::capture());
