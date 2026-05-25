@@ -5,6 +5,28 @@ use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
+// Serve compiled assets through PHP (vercel-php routes all requests to the lambda)
+Route::get('/build/{path}', function (string $path) {
+    $file = public_path('build/' . $path);
+    if (!is_file($file)) abort(404);
+    $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $mime = match($ext) {
+        'css'  => 'text/css',
+        'js'   => 'application/javascript',
+        'json' => 'application/json',
+        'woff2'=> 'font/woff2',
+        'woff' => 'font/woff',
+        'ttf'  => 'font/ttf',
+        'svg'  => 'image/svg+xml',
+        'png'  => 'image/png',
+        default=> 'application/octet-stream',
+    };
+    return response(file_get_contents($file), 200, [
+        'Content-Type'  => $mime,
+        'Cache-Control' => 'public, immutable, max-age=31536000',
+    ]);
+})->where('path', '.+');
+
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 Route::post('/send', [DashboardController::class, 'send'])->name('send');
 

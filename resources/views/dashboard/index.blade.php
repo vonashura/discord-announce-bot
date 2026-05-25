@@ -27,16 +27,12 @@
         <div class="flex gap-1 mb-6 bg-gray-900 p-1 rounded-xl border border-gray-800">
             <button type="button" onclick="switchTab('general')" id="tab-general"
                 class="flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all bg-indigo-600 text-white flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
-                </svg>
+                <span class="material-symbols-outlined">campaign</span>
                 Anuncio General
             </button>
             <button type="button" onclick="switchTab('fortnite')" id="tab-fortnite"
                 class="flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all text-gray-400 hover:text-white flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>
-                </svg>
+                <span class="material-symbols-outlined">sports_esports</span>
                 Partida Fortnite
             </button>
         </div>
@@ -63,9 +59,9 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Título</label>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Titulo</label>
                     <input type="text" name="title" id="g-title" required maxlength="256"
-                        placeholder="Título del anuncio..."
+                        placeholder="Titulo del anuncio..."
                         class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                 </div>
 
@@ -84,9 +80,7 @@
 
                 <button type="submit"
                     class="w-full py-3 px-6 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                    </svg>
+                    <span class="material-symbols-outlined">send</span>
                     Enviar Anuncio
                 </button>
             </form>
@@ -153,9 +147,7 @@
 
                 <button type="submit"
                     class="w-full py-3 px-6 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                    </svg>
+                    <span class="material-symbols-outlined">sports_esports</span>
                     Publicar Partida
                 </button>
             </form>
@@ -169,9 +161,7 @@
         <div class="bg-gray-800 rounded-xl p-4 border border-gray-700">
             <div class="flex items-start gap-3">
                 <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center flex-shrink-0">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                    </svg>
+                    <span class="material-symbols-outlined text-white">smart_toy</span>
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-baseline gap-2 mb-2">
