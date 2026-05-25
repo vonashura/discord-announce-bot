@@ -110,22 +110,42 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Modo de juego</label>
-                    <select name="mode" id="f-mode"
+                    <select name="mode" id="f-mode" onchange="window.updatePreview()"
                         class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                        <option value="construction">Construccion</option>
-                        <option value="no_build">Sin Construccion (Zero Build)</option>
-                        <option value="ranked_build">Ranked Construccion</option>
-                        <option value="ranked_no_build">Ranked Sin Construccion</option>
+                        <option value="zero_build">Cero Construccion</option>
+                        <option value="battle_royale">Battle Royale</option>
+                        <option value="reload_build">Recarga (Construccion)</option>
+                        <option value="reload_zero">Recarga (Cero Build)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Modalidad</label>
+                    <select name="modalidad" id="f-modalidad" onchange="window.updatePreview()"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        <option value="solo">Solitario</option>
+                        <option value="duo">Duo</option>
+                        <option value="trio">Trio</option>
+                        <option value="squad">Escuadron</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Clasificatoria</label>
+                    <select name="clasificatoria" id="f-clasificatoria" onchange="window.updatePreview()"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        <option value="no">No</option>
+                        <option value="si">Si</option>
                     </select>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Region</label>
-                    <select name="region" id="f-region"
+                    <select name="region" id="f-region" onchange="window.updatePreview()"
                         class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        <option value="eu" selected>Europa</option>
                         <option value="na-east">NA Este</option>
                         <option value="na-west">NA Oeste</option>
-                        <option value="eu" selected>Europa</option>
                         <option value="br">Brasil</option>
                         <option value="asia">Asia</option>
                         <option value="oce">Oceania</option>
@@ -172,11 +192,19 @@
                         <div class="bg-gray-700/80 p-3 space-y-2">
                             <div id="preview-title" class="font-semibold text-white text-sm">Titulo del anuncio</div>
                             <div id="preview-body" class="text-gray-300 text-xs leading-relaxed">Tu mensaje aqui...</div>
-                            <div id="preview-fields" class="space-y-2 pt-1">
-                                <div class="flex gap-4">
+                            <div id="preview-fields" class="space-y-1 pt-1">
+                                <div class="flex gap-3 flex-wrap">
                                     <div>
                                         <p class="text-xs font-semibold text-gray-400">Modo</p>
-                                        <p id="pf-mode" class="text-xs text-white">Construccion</p>
+                                        <p id="pf-mode" class="text-xs text-white">Cero Construccion</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-gray-400">Modalidad</p>
+                                        <p id="pf-modalidad" class="text-xs text-white">Solitario</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-gray-400">Clasificatoria</p>
+                                        <p id="pf-clasificatoria" class="text-xs text-white">No</p>
                                     </div>
                                     <div>
                                         <p class="text-xs font-semibold text-gray-400">Region</p>

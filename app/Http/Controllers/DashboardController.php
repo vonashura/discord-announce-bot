@@ -27,9 +27,11 @@ class DashboardController extends Controller
             'title'       => 'required_if:type,general|nullable|string|max:256',
             'message'     => 'required_if:type,general|nullable|string|max:2000',
             // Fortnite
-            'mode'        => 'required_if:type,fortnite|nullable|string',
-            'region'      => 'required_if:type,fortnite|nullable|string',
-            'password'    => 'required_if:type,fortnite|nullable|string|max:50',
+            'mode'          => 'required_if:type,fortnite|nullable|string',
+            'modalidad'     => 'required_if:type,fortnite|nullable|string',
+            'clasificatoria'=> 'required_if:type,fortnite|nullable|in:si,no',
+            'region'        => 'required_if:type,fortnite|nullable|string',
+            'password'      => 'required_if:type,fortnite|nullable|string|max:50',
         ]);
 
         $embed = $validated['type'] === 'general'
@@ -40,6 +42,8 @@ class DashboardController extends Controller
             )
             : $this->discord->buildFortniteEmbed(
                 $validated['mode'],
+                $validated['modalidad'],
+                $validated['clasificatoria'],
                 $validated['region'],
                 $validated['password'],
                 $validated['color']

@@ -21,19 +21,26 @@ class DiscordService
     ];
 
     private const MODES = [
-        'construction'    => '🏗️ Construcción',
-        'no_build'        => '⚡ Sin Construcción (Zero Build)',
-        'ranked_build'    => '🏆 Ranked Construcción',
-        'ranked_no_build' => '🏆 Ranked Sin Construcción',
+        'zero_build'    => 'Cero Construccion',
+        'battle_royale' => 'Battle Royale',
+        'reload_build'  => 'Recarga (Construccion)',
+        'reload_zero'   => 'Recarga (Cero Build)',
+    ];
+
+    private const MODALIDADES = [
+        'solo'  => 'Solitario',
+        'duo'   => 'Duo',
+        'trio'  => 'Trio',
+        'squad' => 'Escuadron',
     ];
 
     private const REGIONS = [
-        'na-east' => '🌎 NA Este',
-        'na-west' => '🌎 NA Oeste',
-        'eu'      => '🌍 Europa',
-        'br'      => '🌎 Brasil',
-        'asia'    => '🌏 Asia',
-        'oce'     => '🌏 Oceanía',
+        'eu'      => 'Europa',
+        'na-east' => 'NA Este',
+        'na-west' => 'NA Oeste',
+        'br'      => 'Brasil',
+        'asia'    => 'Asia',
+        'oce'     => 'Oceania',
     ];
 
     // ── Config resolution: DB → env fallback ───────────────────────
@@ -152,18 +159,25 @@ class DiscordService
         ];
     }
 
-    public function buildFortniteEmbed(string $mode, string $region, string $password, string $color): array
+    public static function modalidadName(string $key): string
+    {
+        return self::MODALIDADES[$key] ?? $key;
+    }
+
+    public function buildFortniteEmbed(string $mode, string $modalidad, string $clasificatoria, string $region, string $password, string $color): array
     {
         return [
-            'title'     => '🎮 Partida Privada de Fortnite',
+            'title'     => 'Partida Privada de Fortnite',
             'color'     => self::color($color),
             'fields'    => [
-                ['name' => '🕹️ Modo',      'value' => self::modeName($mode),     'inline' => true],
-                ['name' => '🌐 Región',     'value' => self::regionName($region), 'inline' => true],
-                ['name' => '🔑 Contraseña', 'value' => "||{$password}||",         'inline' => false],
+                ['name' => 'Modo',          'value' => self::modeName($mode),          'inline' => true],
+                ['name' => 'Modalidad',     'value' => self::modalidadName($modalidad), 'inline' => true],
+                ['name' => 'Clasificatoria','value' => $clasificatoria === 'si' ? 'Si' : 'No', 'inline' => true],
+                ['name' => 'Region',        'value' => self::regionName($region),       'inline' => true],
+                ['name' => 'Contrasena',    'value' => "||{$password}||",               'inline' => false],
             ],
             'timestamp' => now()->toIso8601String(),
-            'footer'    => ['text' => 'Partida Privada • Fortnite'],
+            'footer'    => ['text' => 'Partida Privada | Fortnite'],
         ];
     }
 }

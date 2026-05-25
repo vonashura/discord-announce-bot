@@ -10,16 +10,23 @@ const COLORS = {
 };
 
 const MODES = {
-    construction:    'Construccion',
-    no_build:        'Sin Construccion',
-    ranked_build:    'Ranked Construccion',
-    ranked_no_build: 'Ranked Sin Construccion',
+    zero_build:    'Cero Construccion',
+    battle_royale: 'Battle Royale',
+    reload_build:  'Recarga (Construccion)',
+    reload_zero:   'Recarga (Cero Build)',
+};
+
+const MODALIDADES = {
+    solo:  'Solitario',
+    duo:   'Duo',
+    trio:  'Trio',
+    squad: 'Escuadron',
 };
 
 const REGIONS = {
+    'eu':      'Europa',
     'na-east': 'NA Este',
     'na-west': 'NA Oeste',
-    'eu':      'Europa',
     'br':      'Brasil',
     'asia':    'Asia',
     'oce':     'Oceania',
@@ -88,15 +95,21 @@ window.updatePreview = function() {
     if (body)   body.style.display   = isFortnite ? 'none'  : 'block';
 
     if (isFortnite) {
-        const mode   = document.getElementById('f-mode')?.value   || 'construction';
-        const region = document.getElementById('f-region')?.value || 'eu';
+        const mode          = document.getElementById('f-mode')?.value          || 'zero_build';
+        const modalidad     = document.getElementById('f-modalidad')?.value     || 'solo';
+        const clasificatoria= document.getElementById('f-clasificatoria')?.value|| 'no';
+        const region        = document.getElementById('f-region')?.value        || 'eu';
         const title  = document.getElementById('preview-title');
         const footer = document.getElementById('preview-footer');
         const pfMode = document.getElementById('pf-mode');
+        const pfMod  = document.getElementById('pf-modalidad');
+        const pfClas = document.getElementById('pf-clasificatoria');
         const pfReg  = document.getElementById('pf-region');
         if (title)  title.textContent  = 'Partida Privada de Fortnite';
-        if (pfMode) pfMode.textContent = MODES[mode]   || mode;
-        if (pfReg)  pfReg.textContent  = REGIONS[region] || region;
+        if (pfMode) pfMode.textContent = MODES[mode]          || mode;
+        if (pfMod)  pfMod.textContent  = MODALIDADES[modalidad] || modalidad;
+        if (pfClas) pfClas.textContent = clasificatoria === 'si' ? 'Si' : 'No';
+        if (pfReg)  pfReg.textContent  = REGIONS[region]       || region;
         if (footer) footer.textContent = 'Partida Privada | Fortnite';
     } else {
         const titleVal = document.getElementById('g-title')?.value   || 'Titulo del anuncio';
