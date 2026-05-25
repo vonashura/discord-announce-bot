@@ -6,13 +6,18 @@
     <title>@yield('title', 'Discord Announce Bot')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" rel="stylesheet">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @php
+        try {
+            $manifest = json_decode(file_get_contents(public_path('build/manifest.json')), true);
+            $cssFile  = $manifest['resources/css/app.css']['file'] ?? null;
+            $jsFile   = $manifest['resources/js/app.js']['file'] ?? null;
+            $css = $cssFile ? file_get_contents(public_path('build/' . $cssFile)) : null;
+            $js  = $jsFile  ? file_get_contents(public_path('build/' . $jsFile))  : null;
+        } catch (\Throwable $e) { $css = null; $js = null; }
+    @endphp
+    @if($css)<style>{!! $css !!}</style>@endif
     <style>
-        .material-symbols-outlined {
-            font-size: 18px;
-            line-height: 1;
-            vertical-align: middle;
-        }
+        .material-symbols-outlined { font-size: 18px; line-height: 1; vertical-align: middle; }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen flex">
@@ -65,5 +70,6 @@
         </main>
     </div>
 
+    @if($js ?? null)<script>{!! $js !!}</script>@endif
 </body>
 </html>
