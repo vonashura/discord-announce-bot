@@ -14,6 +14,21 @@ Route::post('/settings/login', [SettingsController::class, 'login'])->name('sett
 Route::post('/settings/save', [SettingsController::class, 'save'])->name('settings.save');
 Route::post('/settings/logout', [SettingsController::class, 'logout'])->name('settings.logout');
 
+// Discord endpoint diagnostic (no auth required — remove after debugging)
+Route::get('/discord-debug', function () {
+    $discord = app(\App\Services\DiscordService::class);
+    $publicKey = $discord->getPublicKey();
+    return response()->json([
+        'sodium_available'    => function_exists('sodium_crypto_sign_verify_detached'),
+        'public_key_source'   => $publicKey ? 'ok' : 'MISSING',
+        'public_key_preview'  => $publicKey ? substr($publicKey, 0, 8) . '...' : null,
+        'db_connection'       => (function () {
+            try { \Illuminate\Support\Facades\DB::connection()->getPdo(); return 'ok'; }
+            catch (\Exception $e) { return $e->getMessage(); }
+        })(),
+    ]);
+});
+
 Route::get('/debug-assets', function () {
     $p = public_path('build');
     return response()->json([
