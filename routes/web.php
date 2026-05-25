@@ -24,6 +24,15 @@ Route::get('/debug-assets', function () {
     ]);
 });
 
+// Register Discord slash commands (protected by SETTINGS_PASSWORD)
+Route::get('/register-commands', function () {
+    if (env('SETTINGS_PASSWORD') && request('key') !== env('SETTINGS_PASSWORD')) {
+        abort(403);
+    }
+    Artisan::call('discord:register-commands');
+    return '<pre>' . Artisan::output() . '</pre>';
+});
+
 // One-time migration runner (protected by SETTINGS_PASSWORD)
 Route::get('/migrate', function () {
     if (env('SETTINGS_PASSWORD') && request('key') !== env('SETTINGS_PASSWORD')) {
