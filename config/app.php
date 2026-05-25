@@ -9,9 +9,7 @@ return [
     'locale'          => 'es',
     'fallback_locale' => 'en',
     'faker_locale'    => 'es_ES',
-    'key'             => env('APP_KEY'),
-    'cipher'          => 'AES-256-CBC',
-    'maintenance'     => ['driver' => 'file'],
-    'providers'       => [],
-    'aliases'         => [],
+    'key'         => env('APP_KEY'),
+    'cipher'      => 'AES-256-CBC',
+    'maintenance' => ['driver' => 'file'],
 ];

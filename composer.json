@@ -1,13 +1,12 @@
 {
-    "name": "discord-announce-bot",
+    "name": "vonashura/discord-announce-bot",
     "type": "project",
     "description": "Discord Announcement Bot - Laravel 13 + Tailwind",
     "keywords": ["discord", "bot", "laravel"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^13.0",
-        "laravel/tinker": "^2.10.1"
+        "laravel/framework": "^13.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23.1",
