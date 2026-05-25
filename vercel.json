@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "public/build",
+  "outputDirectory": "public",
   "installCommand": "npm install",
   "functions": {
     "api/index.php": {
@@ -12,11 +12,11 @@
     {
       "src": "/build/(.*)",
       "headers": { "cache-control": "public, immutable, max-age=31536000" },
-      "dest": "/public/build/$1"
+      "dest": "/build/$1"
     },
     {
       "src": "/(favicon\\.ico|robots\\.txt)",
-      "dest": "/public/$1"
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
