@@ -35,6 +35,16 @@ Route::post('/settings/login', [SettingsController::class, 'login'])->name('sett
 Route::post('/settings/save', [SettingsController::class, 'save'])->name('settings.save');
 Route::post('/settings/logout', [SettingsController::class, 'logout'])->name('settings.logout');
 
+Route::get('/debug-assets', function () {
+    $p = public_path('build');
+    return response()->json([
+        'public_path' => $p,
+        'exists' => is_dir($p),
+        'files' => is_dir($p) ? array_slice(scandir($p), 2) : [],
+        'assets' => is_dir("$p/assets") ? scandir("$p/assets") : 'no assets dir',
+    ]);
+});
+
 // One-time migration runner (protected by SETTINGS_PASSWORD)
 Route::get('/migrate', function () {
     if (env('SETTINGS_PASSWORD') && request('key') !== env('SETTINGS_PASSWORD')) {
