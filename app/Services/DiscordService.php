@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
 
 class DiscordService
@@ -35,10 +36,25 @@ class DiscordService
         'oce'     => '🌏 Oceanía',
     ];
 
+    // ── Config resolution: DB → env fallback ───────────────────────
+    private function cfg(string $key): ?string
+    {
+        $dbKey = 'discord_' . $key;
+        try {
+            $val = Setting::get($dbKey);
+            if ($val !== null && $val !== '') {
+                return $val;
+            }
+        } catch (\Exception) {
+            // DB not ready — fall through to env
+        }
+        return config("discord.{$key}") ?: null;
+    }
+
     private function headers(): array
     {
         return [
-            'Authorization' => 'Bot ' . config('discord.token'),
+            'Authorization' => 'Bot ' . $this->cfg('token'),
             'Content-Type'  => 'application/json',
         ];
     }
@@ -67,13 +83,13 @@ class DiscordService
 
     public function registerCommands(): array
     {
-        $appId   = config('discord.application_id');
-        $guildId = config('discord.guild_id');
+        $appId   = $this->cfg('application_id');
+        $guildId = $this->cfg('guild_id');
 
         $commands = [[
             'name'                       => 'announce',
             'description'                => 'Enviar un anuncio o partida privada de Fortnite',
-            'default_member_permissions' => '8', // ADMINISTRATOR
+            'default_member_permissions' => '8',
         ]];
 
         $url = $guildId
@@ -83,6 +99,31 @@ class DiscordService
         return Http::withHeaders($this->headers())
             ->put($url, $commands)
             ->json() ?? [];
+    }
+
+    public function getPublicKey(): ?string
+    {
+        return $this->cfg('public_key');
+    }
+
+    public function getAnnouncementChannelId(): ?string
+    {
+        return $this->cfg('announcement_channel_id');
+    }
+
+    public function getFortniteChannelId(): ?string
+    {
+        return $this->cfg('fortnite_channel_id') ?: $this->cfg('announcement_channel_id');
+    }
+
+    public function getAnnounceRoleId(): ?string
+    {
+        return $this->cfg('announce_role_id') ?: null;
+    }
+
+    public function getFortniteRoleId(): ?string
+    {
+        return $this->cfg('fortnite_role_id') ?: null;
     }
 
     public static function color(string $key): int
@@ -111,12 +152,8 @@ class DiscordService
         ];
     }
 
-    public function buildFortniteEmbed(
-        string $mode,
-        string $region,
-        string $password,
-        string $color
-    ): array {
+    public function buildFortniteEmbed(string $mode, string $region, string $password, string $color): array
+    {
         return [
             'title'     => '🎮 Partida Privada de Fortnite',
             'color'     => self::color($color),

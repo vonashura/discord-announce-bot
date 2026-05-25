@@ -26,6 +26,11 @@
                       {{ request()->routeIs('dashboard') ? 'bg-indigo-600/20 text-indigo-400' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
                 <span>📤</span> Enviar Anuncio
             </a>
+            <a href="{{ route('settings') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                      {{ request()->routeIs('settings*') ? 'bg-indigo-600/20 text-indigo-400' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                <span>⚙️</span> Configuración
+            </a>
         </nav>
 
         <div class="p-4 border-t border-gray-800">

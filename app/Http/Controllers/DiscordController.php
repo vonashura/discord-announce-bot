@@ -161,8 +161,8 @@ class DiscordController extends Controller
             $message = $this->modalValue($components, 'message');
 
             $embed     = $this->discord->buildGeneralEmbed($title, $message, $color);
-            $channelId = config('discord.announcement_channel_id');
-            $roleId    = config('discord.announce_role_id');
+            $channelId = $this->discord->getAnnouncementChannelId();
+            $roleId    = $this->discord->getAnnounceRoleId();
             $this->discord->sendEmbed($channelId, $embed, $roleId ? "<@&{$roleId}>" : null);
 
             return $this->updateWithSuccess('✅ **Anuncio enviado correctamente.**');
@@ -177,8 +177,8 @@ class DiscordController extends Controller
             $password = $this->modalValue($components, 'password');
 
             $embed     = $this->discord->buildFortniteEmbed($mode, $region, $password, $color);
-            $channelId = config('discord.fortnite_channel_id') ?: config('discord.announcement_channel_id');
-            $roleId    = config('discord.fortnite_role_id');
+            $channelId = $this->discord->getFortniteChannelId();
+            $roleId    = $this->discord->getFortniteRoleId();
             $this->discord->sendEmbed($channelId, $embed, $roleId ? "<@&{$roleId}>" : null);
 
             return $this->updateWithSuccess('✅ **Partida privada publicada.**');

@@ -2,21 +2,24 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\DiscordService;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class VerifyDiscordSignature
 {
+    public function __construct(private DiscordService $discord) {}
+
     public function handle(Request $request, Closure $next): Response
     {
         $signature = $request->header('X-Signature-Ed25519');
         $timestamp  = $request->header('X-Signature-Timestamp');
         $body       = $request->getContent();
-        $publicKey  = config('discord.public_key');
+        $publicKey  = $this->discord->getPublicKey();
 
         if (!$signature || !$timestamp || !$publicKey) {
-            abort(401, 'Missing Discord signature headers');
+            abort(401, 'Missing Discord signature headers or public key not configured');
         }
 
         try {
