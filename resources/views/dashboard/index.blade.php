@@ -52,7 +52,7 @@
                     </select>
                 </div>
 
-                <div id="general-webhook-field" class="hidden">
+                <div id="general-webhook-field">
                     <label class="block text-sm font-medium text-gray-300 mb-2">URL del Webhook</label>
                     <input type="url" name="webhook_url" placeholder="https://discord.com/api/webhooks/..."
                         class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
@@ -87,7 +87,7 @@
         </div>
 
         {{-- ── FORTNITE FORM ── --}}
-        <div id="form-fortnite" class="hidden">
+        <div id="form-fortnite">
             <form action="{{ route('send') }}" method="POST" class="space-y-5" onchange="updatePreview()" oninput="updatePreview()">
                 @csrf
                 <input type="hidden" name="type" value="fortnite">
@@ -102,7 +102,7 @@
                     </select>
                 </div>
 
-                <div id="fortnite-webhook-field" class="hidden">
+                <div id="fortnite-webhook-field">
                     <label class="block text-sm font-medium text-gray-300 mb-2">URL del Webhook</label>
                     <input type="url" name="webhook_url" placeholder="https://discord.com/api/webhooks/..."
                         class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
@@ -172,7 +172,7 @@
                         <div class="bg-gray-700/80 p-3 space-y-2">
                             <div id="preview-title" class="font-semibold text-white text-sm">Titulo del anuncio</div>
                             <div id="preview-body" class="text-gray-300 text-xs leading-relaxed">Tu mensaje aqui...</div>
-                            <div id="preview-fields" class="space-y-2 pt-1 hidden">
+                            <div id="preview-fields" class="space-y-2 pt-1">
                                 <div class="flex gap-4">
                                     <div>
                                         <p class="text-xs font-semibold text-gray-400">Modo</p>

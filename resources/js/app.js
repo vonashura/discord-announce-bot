@@ -1,119 +1,129 @@
-// ── Color palette ──────────────────────────────────────────────────
 const COLORS = {
-    azul:     { hex: '#5865F2', label: '🔵 Azul' },
-    verde:    { hex: '#57F287', label: '🟢 Verde' },
-    rojo:     { hex: '#ED4245', label: '🔴 Rojo' },
-    amarillo: { hex: '#FEE75C', label: '🟡 Amarillo' },
-    morado:   { hex: '#9B59B6', label: '🟣 Morado' },
-    naranja:  { hex: '#E67E22', label: '🟠 Naranja' },
-    cyan:     { hex: '#1ABC9C', label: '🩵 Cyan' },
-    negro:    { hex: '#2C2F33', label: '⚫ Negro' },
+    azul:     { hex: '#5865F2', label: 'Azul' },
+    verde:    { hex: '#57F287', label: 'Verde' },
+    rojo:     { hex: '#ED4245', label: 'Rojo' },
+    amarillo: { hex: '#FEE75C', label: 'Amarillo' },
+    morado:   { hex: '#9B59B6', label: 'Morado' },
+    naranja:  { hex: '#E67E22', label: 'Naranja' },
+    cyan:     { hex: '#1ABC9C', label: 'Cyan' },
+    negro:    { hex: '#2C2F33', label: 'Negro' },
 };
 
 const MODES = {
-    construction:    '🏗️ Construcción',
-    no_build:        '⚡ Sin Construcción',
-    ranked_build:    '🏆 Ranked Construc.',
-    ranked_no_build: '🏆 Ranked Sin Construc.',
+    construction:    'Construccion',
+    no_build:        'Sin Construccion',
+    ranked_build:    'Ranked Construccion',
+    ranked_no_build: 'Ranked Sin Construccion',
 };
 
 const REGIONS = {
-    'na-east': '🌎 NA Este',
-    'na-west': '🌎 NA Oeste',
-    'eu':      '🌍 Europa',
-    'br':      '🌎 Brasil',
-    'asia':    '🌏 Asia',
-    'oce':     '🌏 Oceanía',
+    'na-east': 'NA Este',
+    'na-west': 'NA Oeste',
+    'eu':      'Europa',
+    'br':      'Brasil',
+    'asia':    'Asia',
+    'oce':     'Oceania',
 };
 
 let currentTab = 'general';
 
-// ── Render color pickers ────────────────────────────────────────────
 function renderColorPicker(containerId, inputId, defaultColor = 'azul') {
     const container = document.getElementById(containerId);
     if (!container) return;
-
     container.innerHTML = Object.entries(COLORS).map(([key, { hex, label }]) => `
         <button type="button"
-            onclick="selectColor('${containerId}', '${inputId}', '${key}', '${hex}')"
+            onclick="window.selectColor('${containerId}', '${inputId}', '${key}', '${hex}')"
             id="color-btn-${containerId}-${key}"
             title="${label}"
-            class="h-10 rounded-lg border-2 transition-all ${key === defaultColor ? 'border-white scale-110' : 'border-transparent hover:border-gray-500'}"
-            style="background-color: ${hex}">
+            style="background-color:${hex};width:100%;height:40px;border-radius:8px;border:2px solid ${key === defaultColor ? '#fff' : 'transparent'};transform:${key === defaultColor ? 'scale(1.1)' : 'scale(1)'};cursor:pointer;transition:all .15s;">
         </button>
     `).join('');
-
     document.getElementById(inputId).value = defaultColor;
 }
 
-function selectColor(containerId, inputId, colorKey, hex) {
-    // Update button states
+window.selectColor = function(containerId, inputId, colorKey, hex) {
     Object.keys(COLORS).forEach(k => {
         const btn = document.getElementById(`color-btn-${containerId}-${k}`);
-        if (btn) btn.className = btn.className
-            .replace('border-white scale-110', 'border-transparent hover:border-gray-500');
+        if (!btn) return;
+        btn.style.borderColor = 'transparent';
+        btn.style.transform   = 'scale(1)';
     });
-    const selected = document.getElementById(`color-btn-${containerId}-${colorKey}`);
-    if (selected) selected.className = selected.className
-        .replace('border-transparent hover:border-gray-500', 'border-white scale-110');
-
+    const sel = document.getElementById(`color-btn-${containerId}-${colorKey}`);
+    if (sel) { sel.style.borderColor = '#fff'; sel.style.transform = 'scale(1.1)'; }
     document.getElementById(inputId).value = colorKey;
+    const preview = document.getElementById('embed-preview');
+    if (preview) preview.style.borderLeftColor = hex;
+    window.updatePreview();
+};
 
-    // Update preview border
-    document.getElementById('embed-preview').style.borderLeftColor = hex;
-    updatePreview();
-}
-
-// ── Tab switching ───────────────────────────────────────────────────
-function switchTab(tab) {
+window.switchTab = function(tab) {
     currentTab = tab;
-    const tabs = ['general', 'fortnite'];
-    tabs.forEach(t => {
-        document.getElementById(`form-${t}`).classList.toggle('hidden', t !== tab);
-        const btn = document.getElementById(`tab-${t}`);
+    ['general', 'fortnite'].forEach(t => {
+        const form = document.getElementById(`form-${t}`);
+        const btn  = document.getElementById(`tab-${t}`);
+        if (!form || !btn) return;
         if (t === tab) {
-            btn.classList.remove('text-gray-400', 'hover:text-white');
-            btn.classList.add('bg-indigo-600', 'text-white');
+            form.style.display = 'block';
+            btn.style.background = '#4f46e5';
+            btn.style.color = '#fff';
         } else {
-            btn.classList.add('text-gray-400', 'hover:text-white');
-            btn.classList.remove('bg-indigo-600', 'text-white');
+            form.style.display = 'none';
+            btn.style.background = 'transparent';
+            btn.style.color = '#9ca3af';
         }
     });
-    updatePreview();
-}
+    window.updatePreview();
+};
 
-// ── Webhook field toggle ────────────────────────────────────────────
-function toggleWebhookField(form, value) {
-    document.getElementById(`${form}-webhook-field`)
-        ?.classList.toggle('hidden', value !== 'webhook');
-}
+window.toggleWebhookField = function(form, value) {
+    const el = document.getElementById(`${form}-webhook-field`);
+    if (el) el.style.display = value === 'webhook' ? 'block' : 'none';
+};
 
-// ── Live preview update ─────────────────────────────────────────────
-function updatePreview() {
+window.updatePreview = function() {
     const isFortnite = currentTab === 'fortnite';
-
-    document.getElementById('preview-fields').classList.toggle('hidden', !isFortnite);
-    document.getElementById('preview-body').classList.toggle('hidden', isFortnite);
+    const fields = document.getElementById('preview-fields');
+    const body   = document.getElementById('preview-body');
+    if (fields) fields.style.display = isFortnite ? 'block' : 'none';
+    if (body)   body.style.display   = isFortnite ? 'none'  : 'block';
 
     if (isFortnite) {
         const mode   = document.getElementById('f-mode')?.value   || 'construction';
         const region = document.getElementById('f-region')?.value || 'eu';
-        document.getElementById('preview-title').textContent = '🎮 Partida Privada de Fortnite';
-        document.getElementById('pf-mode').textContent   = MODES[mode]   || mode;
-        document.getElementById('pf-region').textContent = REGIONS[region] || region;
-        document.getElementById('preview-footer').textContent = 'Partida Privada • Fortnite';
+        const title  = document.getElementById('preview-title');
+        const footer = document.getElementById('preview-footer');
+        const pfMode = document.getElementById('pf-mode');
+        const pfReg  = document.getElementById('pf-region');
+        if (title)  title.textContent  = 'Partida Privada de Fortnite';
+        if (pfMode) pfMode.textContent = MODES[mode]   || mode;
+        if (pfReg)  pfReg.textContent  = REGIONS[region] || region;
+        if (footer) footer.textContent = 'Partida Privada | Fortnite';
     } else {
-        const title   = document.getElementById('g-title')?.value   || 'Título del anuncio';
-        const message = document.getElementById('g-message')?.value || 'Tu mensaje aquí...';
-        document.getElementById('preview-title').textContent = title || 'Título del anuncio';
-        document.getElementById('preview-body').textContent  = message || 'Tu mensaje aquí...';
-        document.getElementById('preview-footer').textContent = '📢 Anuncio General';
+        const titleVal = document.getElementById('g-title')?.value   || 'Titulo del anuncio';
+        const msgVal   = document.getElementById('g-message')?.value || 'Tu mensaje aqui...';
+        const title    = document.getElementById('preview-title');
+        const bodyEl   = document.getElementById('preview-body');
+        const footer   = document.getElementById('preview-footer');
+        if (title)  title.textContent  = titleVal;
+        if (bodyEl) bodyEl.textContent = msgVal;
+        if (footer) footer.textContent = 'Anuncio General';
     }
-}
+};
 
-// ── Init ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     renderColorPicker('color-general',  'g-color', 'azul');
     renderColorPicker('color-fortnite', 'f-color', 'azul');
-    updatePreview();
+
+    // Init hidden state via JS instead of relying on Tailwind 'hidden' class
+    const fortniteForm = document.getElementById('form-fortnite');
+    if (fortniteForm) fortniteForm.style.display = 'none';
+    const generalForm = document.getElementById('form-general');
+    if (generalForm) generalForm.style.display = 'block';
+
+    ['general-webhook-field', 'fortnite-webhook-field'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    window.updatePreview();
 });
