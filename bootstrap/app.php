@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'discord.verify' => \App\Http\Middleware\VerifyDiscordSignature::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'discord/interactions',
+            'discord-echo',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
