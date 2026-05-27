@@ -48,17 +48,27 @@ class AuthController extends Controller
             return redirect()->route('login')->withErrors(['oauth' => 'Acceso cancelado en Discord.']);
         }
 
+        $redirectUri = url('/auth/discord/callback');
+        \Illuminate\Support\Facades\Log::debug('OAuth callback', [
+            'redirect_uri'    => $redirectUri,
+            'has_client_id'   => (bool) config('discord.application_id'),
+            'has_client_secret' => (bool) config('discord.client_secret'),
+        ]);
+
         // Exchange code → access token
         $tokenRes = Http::asForm()->post('https://discord.com/api/v10/oauth2/token', [
             'client_id'     => config('discord.application_id'),
             'client_secret' => config('discord.client_secret'),
             'grant_type'    => 'authorization_code',
             'code'          => $request->input('code'),
-            'redirect_uri'  => url('/auth/discord/callback'),
+            'redirect_uri'  => $redirectUri,
         ]);
 
         if (!$tokenRes->ok()) {
-            return redirect()->route('login')->withErrors(['oauth' => 'Error al obtener token de Discord. Inténtalo de nuevo.']);
+            $errBody = $tokenRes->json();
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'Error al obtener token de Discord: ' . ($errBody['error_description'] ?? $errBody['error'] ?? $tokenRes->status()),
+            ]);
         }
 
         // Get Discord user info
