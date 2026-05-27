@@ -43,20 +43,47 @@
                 <span class="material-symbols-outlined">campaign</span>
                 Enviar Anuncio
             </a>
+
+            @if(isset($authUser) && $authUser->is_admin)
+            <a href="{{ route('admin.users') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
+                      {{ request()->routeIs('admin.*') ? 'bg-indigo-600/20 text-indigo-400' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
+                <span class="material-symbols-outlined">group</span>
+                Usuarios
+            </a>
+
             <a href="{{ route('settings') }}"
                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors
                       {{ request()->routeIs('settings*') ? 'bg-indigo-600/20 text-indigo-400' : 'text-gray-400 hover:bg-gray-800 hover:text-white' }}">
                 <span class="material-symbols-outlined">settings</span>
                 Configuracion
             </a>
+            @endif
         </nav>
 
+        {{-- User info + logout --}}
+        @if(isset($authUser))
         <div class="p-4 border-t border-gray-800">
-            <p class="text-xs text-gray-500">
-                Endpoint Discord:<br>
-                <code class="text-indigo-400 text-xs">/api/discord/interactions</code>
-            </p>
+            <div class="flex items-center gap-3 mb-3">
+                <img src="{{ $authUser->avatarUrl() }}" alt="{{ $authUser->username }}"
+                     class="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0">
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-white truncate">{{ $authUser->username }}</p>
+                    @if($authUser->is_admin)
+                    <p class="text-xs text-indigo-400">Admin</p>
+                    @endif
+                </div>
+            </div>
+            <form action="{{ route('auth.logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined" style="font-size:16px">logout</span>
+                    Cerrar sesión
+                </button>
+            </form>
         </div>
+        @endif
     </aside>
 
     {{-- ── Main content ── --}}

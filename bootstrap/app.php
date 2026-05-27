@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'discord.verify' => \App\Http\Middleware\VerifyDiscordSignature::class,
+            'auth.discord'   => \App\Http\Middleware\RequireDiscordAuth::class,
+            'auth.admin'     => \App\Http\Middleware\RequireAdmin::class,
         ]);
         $middleware->validateCsrfTokens(except: [
             'discord/interactions',
