@@ -52,10 +52,21 @@ class DashboardController extends Controller
         if ($validated['channel'] === 'webhook' && !empty($validated['webhook_url'])) {
             $this->discord->sendWebhook($validated['webhook_url'], $embed);
         } else {
-            $channelId = $validated['channel'] === 'fortnite'
-                ? config('discord.fortnite_channel_id')
-                : config('discord.announcement_channel_id');
-            $this->discord->sendEmbed($channelId, $embed);
+            $isFortnite = $validated['channel'] === 'fortnite';
+            $channelId  = $isFortnite
+                ? $this->discord->getFortniteChannelId()
+                : $this->discord->getAnnouncementChannelId();
+
+            if (!$channelId) {
+                return back()->withErrors([
+                    'channel' => 'Canal no configurado. Ve a /settings y guarda el Channel ID correspondiente.',
+                ]);
+            }
+
+            $roleId = $isFortnite
+                ? $this->discord->getFortniteRoleId()
+                : $this->discord->getAnnounceRoleId();
+            $this->discord->sendEmbed($channelId, $embed, $roleId ? "<@&{$roleId}>" : null);
         }
 
         return back()->with('success', '✅ Anuncio enviado correctamente.');

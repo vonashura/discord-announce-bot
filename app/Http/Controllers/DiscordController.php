@@ -138,9 +138,13 @@ class DiscordController extends Controller
             $title   = $this->modalValue($components, 'title');
             $message = $this->modalValue($components, 'message');
 
-            $embed     = $this->discord->buildGeneralEmbed($title, $message, $color);
             $channelId = $this->discord->getAnnouncementChannelId();
-            $roleId    = $this->discord->getAnnounceRoleId();
+            if (!$channelId) {
+                return $this->ephemeral('❌ Canal de anuncios no configurado. Configúralo en el panel /settings.');
+            }
+
+            $embed  = $this->discord->buildGeneralEmbed($title, $message, $color);
+            $roleId = $this->discord->getAnnounceRoleId();
             $this->discord->sendEmbed($channelId, $embed, $roleId ? "<@&{$roleId}>" : null);
 
             return $this->updateWithSuccess('**Anuncio enviado correctamente.**');
@@ -154,9 +158,13 @@ class DiscordController extends Controller
             $region         = $parts[5] ?? 'eu';
             $password       = $this->modalValue($components, 'password');
 
-            $embed     = $this->discord->buildFortniteEmbed($mode, $modalidad, $clasificatoria, $region, $password, 'azul');
             $channelId = $this->discord->getFortniteChannelId();
-            $roleId    = $this->discord->getFortniteRoleId();
+            if (!$channelId) {
+                return $this->ephemeral('❌ Canal de Fortnite no configurado. Configúralo en el panel /settings.');
+            }
+
+            $embed  = $this->discord->buildFortniteEmbed($mode, $modalidad, $clasificatoria, $region, $password, 'azul');
+            $roleId = $this->discord->getFortniteRoleId();
             $this->discord->sendEmbed($channelId, $embed, $roleId ? "<@&{$roleId}>" : null);
 
             return $this->updateWithSuccess('**Partida privada publicada.**');
