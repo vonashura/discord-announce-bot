@@ -49,8 +49,17 @@ class DashboardController extends Controller
                 $validated['color']
             );
 
+        // Extract @everyone/@here from message to content field so they actually ping
+        $contentParts = [];
+        if (!empty($validated['message'])) {
+            preg_match_all('/@(everyone|here)/', $validated['message'], $mentionMatches);
+            foreach (array_unique($mentionMatches[0]) as $mention) {
+                $contentParts[] = $mention;
+            }
+        }
+
         if ($validated['channel'] === 'webhook' && !empty($validated['webhook_url'])) {
-            $this->discord->sendWebhook($validated['webhook_url'], $embed);
+            $this->discord->sendWebhook($validated['webhook_url'], $embed, $contentParts ? implode(' ', $contentParts) : null);
         } else {
             $isFortnite = $validated['channel'] === 'fortnite';
             $channelId  = $isFortnite
@@ -66,7 +75,12 @@ class DashboardController extends Controller
             $roleId = $isFortnite
                 ? $this->discord->getFortniteRoleId()
                 : $this->discord->getAnnounceRoleId();
-            $this->discord->sendEmbed($channelId, $embed, $roleId ? "<@&{$roleId}>" : null);
+
+            if ($roleId) {
+                $contentParts[] = "<@&{$roleId}>";
+            }
+
+            $this->discord->sendEmbed($channelId, $embed, $contentParts ? implode(' ', $contentParts) : null);
         }
 
         return back()->with('success', '✅ Anuncio enviado correctamente.');

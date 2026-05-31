@@ -67,9 +67,27 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Mensaje</label>
+                    {{-- Formatting toolbar --}}
+                    <div class="flex flex-wrap items-center gap-1 mb-1 px-2 py-1.5 bg-gray-900 rounded-t-xl border border-gray-700 border-b-0">
+                        <button type="button" onclick="insertFormatting('g-message','bold')" title="Negrita (**texto**)" class="fmt-btn font-bold">B</button>
+                        <button type="button" onclick="insertFormatting('g-message','italic')" title="Cursiva (*texto*)" class="fmt-btn italic">I</button>
+                        <button type="button" onclick="insertFormatting('g-message','underline')" title="Subrayado (__texto__)" class="fmt-btn underline">U</button>
+                        <button type="button" onclick="insertFormatting('g-message','strike')" title="Tachado (~~texto~~)" class="fmt-btn line-through">S</button>
+                        <span class="w-px h-4 bg-gray-700 mx-0.5"></span>
+                        <button type="button" onclick="insertFormatting('g-message','code')" title="Código inline" class="fmt-btn font-mono text-xs">`c`</button>
+                        <button type="button" onclick="insertFormatting('g-message','codeblock')" title="Bloque de código" class="fmt-btn font-mono text-xs">```</button>
+                        <button type="button" onclick="insertFormatting('g-message','spoiler')" title="Spoiler (||texto||)" class="fmt-btn font-mono text-xs">||</button>
+                        <span class="w-px h-4 bg-gray-700 mx-0.5"></span>
+                        <button type="button" onclick="insertFormatting('g-message','list')" title="Lista (- elemento)" class="fmt-btn text-base leading-none">≡</button>
+                        <button type="button" onclick="insertFormatting('g-message','quote')" title="Cita (> texto)" class="fmt-btn">&gt;</button>
+                        <span class="w-px h-4 bg-gray-700 mx-0.5"></span>
+                        <button type="button" onclick="insertFormatting('g-message','everyone')" title="Mencionar a todos" class="fmt-btn text-indigo-400 font-semibold">@everyone</button>
+                        <button type="button" onclick="insertFormatting('g-message','here')" title="Mencionar activos" class="fmt-btn text-indigo-400 font-semibold">@here</button>
+                    </div>
                     <textarea name="message" id="g-message" required maxlength="2000" rows="5"
                         placeholder="Escribe el contenido del anuncio..."
-                        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"></textarea>
+                        class="w-full bg-gray-800 border border-gray-700 rounded-b-xl rounded-t-none px-4 py-3 text-white placeholder-gray-600 focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"></textarea>
+                    <p class="text-xs text-gray-600 mt-1">Selecciona texto y pulsa un botón para aplicar formato. Enter = nueva línea.</p>
                 </div>
 
                 <div>

@@ -18,6 +18,15 @@
     @if($css)<style>{!! $css !!}</style>@endif
     <style>
         .material-symbols-outlined { font-size: 18px; line-height: 1; vertical-align: middle; }
+        .fmt-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 26px; height: 26px; padding: 0 5px;
+            border-radius: 5px; border: none; cursor: pointer;
+            font-size: 12px; color: #9ca3af;
+            background: transparent; transition: background .12s, color .12s;
+        }
+        .fmt-btn:hover { background: #374151; color: #fff; }
+        .fmt-btn:active { background: #4b5563; }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen flex">

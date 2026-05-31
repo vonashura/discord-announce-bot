@@ -1,3 +1,105 @@
+function renderDiscordMarkdown(text) {
+    let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+    // Code blocks (before inline code)
+    html = html.replace(/```([\s\S]+?)```/g, (_, code) =>
+        `<span style="display:block;background:#2b2d31;border-radius:4px;padding:4px 8px;font-family:monospace;font-size:11px;color:#c9d1d9;margin:2px 0;white-space:pre-wrap">${code}</span>`
+    );
+    // Inline code
+    html = html.replace(/`([^`\n]+)`/g,
+        '<code style="background:#2b2d31;border-radius:3px;padding:1px 4px;font-family:monospace;font-size:11px;color:#c9d1d9">$1</code>'
+    );
+    // Bold+italic
+    html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    // Bold
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Underline (before italic _)
+    html = html.replace(/__(.+?)__/g, '<u>$1</u>');
+    // Italic *
+    html = html.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    // Italic _
+    html = html.replace(/_([^_\n]+)_/g, '<em>$1</em>');
+    // Strikethrough
+    html = html.replace(/~~(.+?)~~/g, '<s>$1</s>');
+    // Spoiler
+    html = html.replace(/\|\|(.+?)\|\|/g,
+        '<span style="background:#202225;border-radius:3px;padding:0 3px;color:#202225;cursor:pointer" title="Spoiler (oculto)">$1</span>'
+    );
+    // Blockquote
+    html = html.replace(/^&gt; (.+)$/gm,
+        '<span style="display:block;border-left:3px solid #4f545c;padding-left:8px;color:#8e9297;margin:1px 0">$1</span>'
+    );
+    // Lists
+    html = html.replace(/^[-•] (.+)$/gm,
+        '<span style="display:block;padding-left:8px">• $1</span>'
+    );
+    // @everyone / @here
+    html = html.replace(/@(everyone|here)/g,
+        '<span style="background:#414675;color:#dee0fc;border-radius:3px;padding:0 3px;font-size:11px;font-weight:600">@$1</span>'
+    );
+    // Newlines
+    html = html.replace(/\n/g, '<br>');
+
+    return html;
+}
+
+window.insertFormatting = function(taId, syntax) {
+    const ta = document.getElementById(taId);
+    if (!ta) return;
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    const sel    = ta.value.substring(s, e);
+    const before = ta.value.substring(0, s);
+    const after  = ta.value.substring(e);
+
+    const wrap = (l, r, placeholder) => {
+        const inner = sel || placeholder;
+        ta.value = before + l + inner + r + after;
+        const ns = sel ? s + l.length + inner.length + r.length : s + l.length + inner.length;
+        ta.setSelectionRange(ns, ns);
+    };
+
+    switch (syntax) {
+        case 'bold':      wrap('**', '**', 'texto'); break;
+        case 'italic':    wrap('*', '*', 'texto'); break;
+        case 'underline': wrap('__', '__', 'texto'); break;
+        case 'strike':    wrap('~~', '~~', 'texto'); break;
+        case 'code':      wrap('`', '`', 'código'); break;
+        case 'spoiler':   wrap('||', '||', 'spoiler'); break;
+        case 'quote':     wrap('> ', '', 'cita'); break;
+        case 'codeblock': {
+            const inner = sel || 'código';
+            ta.value = before + '```\n' + inner + '\n```' + after;
+            const ns = s + 4 + inner.length + 5;
+            ta.setSelectionRange(ns, ns);
+            break;
+        }
+        case 'list': {
+            if (sel) {
+                const listed = sel.split('\n').map(l => `- ${l}`).join('\n');
+                ta.value = before + listed + after;
+                ta.setSelectionRange(s + listed.length, s + listed.length);
+            } else {
+                ta.value = before + '- elemento' + after;
+                ta.setSelectionRange(s + 10, s + 10);
+            }
+            break;
+        }
+        case 'everyone':
+        case 'here': {
+            const mention = `@${syntax}`;
+            ta.value = before + mention + after;
+            ta.setSelectionRange(s + mention.length, s + mention.length);
+            break;
+        }
+    }
+
+    ta.focus();
+    window.updatePreview();
+};
+
 const COLORS = {
     azul:     { hex: '#5865F2', label: 'Azul' },
     verde:    { hex: '#57F287', label: 'Verde' },
@@ -118,7 +220,7 @@ window.updatePreview = function() {
         const bodyEl   = document.getElementById('preview-body');
         const footer   = document.getElementById('preview-footer');
         if (title)  title.textContent  = titleVal;
-        if (bodyEl) bodyEl.textContent = msgVal;
+        if (bodyEl) bodyEl.innerHTML   = renderDiscordMarkdown(msgVal);
         if (footer) footer.textContent = 'Anuncio General';
     }
 };
